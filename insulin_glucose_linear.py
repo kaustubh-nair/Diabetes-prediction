@@ -12,10 +12,11 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv('./Pima_Indian_diabetes.csv')
 data = data.dropna(axis=0)
-main_data = data[['Glucose', 'Insulin']]
+main_data = data
+print(main_data)
+
 
 zero_insulin_data = main_data[ main_data.Insulin == 0 ]
-print(zero_insulin_data.shape)
 non_zero_insulin_data = main_data[ main_data.Insulin != 0]
 
 train_X = non_zero_insulin_data['Glucose'].values.reshape(-1,1)
@@ -24,15 +25,12 @@ val_X = zero_insulin_data['Glucose'].values.reshape(-1,1)
 
 model = LinearRegression()
 model.fit(train_X, train_y)
-a = model.predict(val_X)
+predicted_y = model.predict(val_X)
+
 j = 0
-print(main_data)
 for i in main_data.index:
     if main_data.at[i, 'Insulin'] == 0:
         main_data.at[i, 'Insulin'] = a[j][0]
         j+=1
-        if main_data.at[i, 'Insulin'] == 0:
-            print(main_data.at[i, 'Insulin'])
 
-print(main_data.sort_values(by=['Insulin'],ascending=True).head(10))
-main_data[ main_data < 0 ] = 0
+
